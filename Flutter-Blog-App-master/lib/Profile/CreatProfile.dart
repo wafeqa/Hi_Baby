@@ -3,9 +3,10 @@
 import 'dart:io';
 
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Pages/Home.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
-import 'package:blogapp/widgets/Switch.dart';
+
 // ignore: unused_import
 import 'package:blogapp/widgets/ToggleButton.dart';
 import 'package:flutter/material.dart';
@@ -52,11 +53,10 @@ class _CreatProfileState extends State<CreatProfile> {
             SizedBox(
               height: 20,
             ),
-            dobField(),
             SizedBox(
               height: 20,
             ),
-            titleTextField(),
+            dobField(),
             SizedBox(
               height: 20,
             ),
@@ -66,37 +66,23 @@ class _CreatProfileState extends State<CreatProfile> {
                   circular = true;
                 });
                 if (_globalkey.currentState.validate()) {
-                  Map<String, String> data = {
-                    "Baby Name": _name.text,
-                    "baby_gender": _type.text,
-                    "DOB": _dob.text,
-                    "titleline": _title.text,
-                    "about": _about.text,
-                  };
-                  var response =
-                      await networkHandler.post("/profile/add", data);
-                  if (response.statusCode == 200 ||
-                      response.statusCode == 201) {
-                    if (_imageFile.path != null) {
-                      var imageResponse = await networkHandler.patchImage(
-                          "/profile/add/image", _imageFile.path);
-                      if (imageResponse.statusCode == 200) {
-                        setState(() {
-                          circular = false;
-                        });
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                            (route) => false);
-                      }
-                    } else {
-                      setState(() {
-                        circular = false;
-                      });
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          (route) => false);
-                    }
+                  var imageResponse = await networkHandler.patchImage(
+                      "/profile/add/image", _imageFile.path);
+                  if (imageResponse.statusCode == 200) {
+                    setState(() {
+                      circular = false;
+                    });
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (route) => false);
                   }
+                } else {
+                  setState(() {
+                    circular = false;
+                  });
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                      (route) => false);
                 }
               },
               child: Center(
@@ -107,29 +93,31 @@ class _CreatProfileState extends State<CreatProfile> {
                     color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Center(
-                    child: FlatButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return SignUpPage();
-                        }));
-                      },
-                      child: circular
-                          ? CircularProgressIndicator()
-                          : Text(
-                              "continue",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  child: RaisedButton(
+                    color: Colors.blueGrey,
+                    onPressed: () {
+                      /* Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                home_page1(name: _name.text))); */
+                      //   Navigator.push(context,
+                      // MaterialPageRoute(builder: (BuildContext context) {
+                      // return SignUpPage();
+                      // }));
+                    },
+                    child: circular
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "continue",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                    ),
+                          ),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -266,8 +254,8 @@ class _CreatProfileState extends State<CreatProfile> {
           color: Colors.black,
           width: 2,
         )),
-        prefixIcon: Icon(
-          Icons.person,
+        suffixIcon: Icon(
+          Icons.date_range,
           color: Colors.grey,
         ),
         labelText: "Date Of Birth",
@@ -297,13 +285,10 @@ class _CreatProfileState extends State<CreatProfile> {
               color: Colors.black,
               width: 2,
             )),
-        prefixIcon: Icon(
-          Icons.person,
+        suffixIcon: Icon(
+          Icons.calendar_today_rounded,
           color: Colors.grey,
         ),
-        labelText: "Title",
-        helperText: "It can't be empty",
-        hintText: "Flutter Developer",
       ),
     );
   }

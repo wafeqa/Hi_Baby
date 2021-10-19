@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../NetworkHandler.dart';
+import 'Home.dart';
 import 'HomePage.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Sign up with email",
+                " tell us more about you",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -139,7 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context) {
-                              return CreatProfile();
+                              // return home_page1();
                             }));
                           },
                           child: null,

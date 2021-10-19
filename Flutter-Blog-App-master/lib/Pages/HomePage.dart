@@ -109,16 +109,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.blueGrey,
         title: Text(titleString[currentState]),
         centerTitle: true,
-        actions: <Widget>[
+        /* actions: <Widget>[
           IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
-        ],
+        */
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.blueGrey,
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => AddBlog()));

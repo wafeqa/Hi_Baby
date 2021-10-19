@@ -31,9 +31,9 @@ class LoginPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               TextInput(
-                                icon: FontAwesomeIcons.solidEnvelope,
-                                hint: 'Email',
-                                inputType: TextInputType.emailAddress,
+                                icon: FontAwesomeIcons.userAlt,
+                                hint: 'user name',
+                                inputType: TextInputType.name,
                                 inputAction: TextInputAction.next,
                               ),
                               PasswordInput(
