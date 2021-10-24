@@ -1,3 +1,7 @@
+// ignore: duplicate_ignore
+// ignore: duplicate_ignore
+// ignore: duplicate_ignore
+// ignore: duplicate_ignore
 // ignore_for_file: unused_import
 
 import 'package:blogapp/Pages/Home.dart';
@@ -11,11 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: unused_import
 import 'package:blogapp/welcom';
-import 'package:blogapp/Pages/login-page.dart';
 
 // ignore: unused_import
 import 'Blog/addBlog.dart';
-import 'Pages/login-page.dart';
 import 'Profile/CreatProfile.dart';
 
 void main() {
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: CreatProfile(),
+      home: LOgin2(),
     );
   }
 }

@@ -29,7 +29,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         // width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white, Colors.green[200]],
+            colors: [Colors.white, Colors.green],
             begin: const FractionalOffset(0.0, 1.0),
             end: const FractionalOffset(0.0, 1.0),
             stops: [0.0, 1.0],

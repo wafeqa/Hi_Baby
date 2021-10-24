@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
 import 'HomePage.dart';
+import 'login2.dart';
 
 class home_page extends StatefulWidget {
   const home_page({Key key}) : super(key: key);
@@ -21,7 +22,46 @@ class _home_pageState extends State<home_page> {
         appBar: AppBar(
           backgroundColor: Colors.blueGrey,
         ),
-        drawer: Drawer(),
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    //   Text("@$username"),
+                  ],
+                ),
+              ),
+              ListTile(
+                title: Text("Gallery"),
+                trailing: Icon(Icons.launch),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text("New Story"),
+                trailing: Icon(Icons.add),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text("Edit profile"),
+                trailing: Icon(Icons.settings),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text("my "),
+                trailing: Icon(Icons.feedback),
+                onTap: () {},
+              ),
+              ListTile(
+                  title: Text("Logout"),
+                  trailing: Icon(Icons.power_settings_new),
+                  onTap: () {}),
+            ],
+          ),
+        ),
         body: ListView(
           children: <Widget>[
             SizedBox(
@@ -169,7 +209,8 @@ class _home_pageState extends State<home_page> {
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => group()),
+                              MaterialPageRoute(
+                                  builder: (context) => group(Key(null))),
                               (route) => false);
                         }),
                   ],

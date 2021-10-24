@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class group extends StatefulWidget {
-  const group({Key key}) : super(key: key);
+  const group(Key key) : super(key: key);
 
   @override
   _groupState createState() => _groupState();
@@ -33,7 +33,7 @@ class _groupState extends State<group> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(40.0),
             child: Container(
               child: Card(
                   child: Column(

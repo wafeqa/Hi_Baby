@@ -1,7 +1,5 @@
 import 'package:blogapp/Blog/addBlog.dart';
 import 'package:blogapp/Pages/WelcomePage.dart';
-import 'package:blogapp/Screen/HomeScreen.dart';
-import 'package:blogapp/Profile/ProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:blogapp/NetworkHandler.dart';
@@ -15,8 +13,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentState = 0;
-  List<Widget> widgets = [HomeScreen(), ProfileScreen()];
-  List<String> titleString = ["Home Page", "Profile Page"];
+
+  List<String> titleString = ["Gallary", "Profile Page"];
   final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
   String username = "";
@@ -120,8 +118,10 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueGrey,
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddBlog()));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddBlog(
+                    key: null,
+                  )));
         },
         child: Text(
           "+",
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.teal,
+        color: Colors.blueGrey,
         shape: CircularNotchedRectangle(),
         notchMargin: 12,
         child: Container(
@@ -164,7 +164,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: widgets[currentState],
     );
   }
 

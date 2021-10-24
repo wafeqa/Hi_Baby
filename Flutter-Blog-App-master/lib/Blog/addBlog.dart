@@ -146,9 +146,9 @@ class _AddBlogState extends State<AddBlog> {
   }
 
   Future addButton() async {
-    final uri = Uri.parse("http://172.20.10.4/htdocs/Hi_Baby/upload.php");
+    final uri = Uri.parse("http://172.20.10.4/Hi_Baby/upload.php");
     var request = (await http.MultipartRequest('POST', uri));
-    request.fields['title'] = title.text;
+    //request.fields['title'] = title.text;
     // myrequest.fields['body'] = body.text;
     var pic = await http.MultipartFile.fromPath("image", image.path);
     request.files.add(pic);

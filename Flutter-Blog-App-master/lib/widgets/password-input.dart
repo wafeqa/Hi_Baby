@@ -5,8 +5,8 @@ import '../palatte.dart';
 class PasswordInput extends StatelessWidget {
   const PasswordInput({
     Key key,
-    @required this.icon,
-    @required this.hint,
+    this.icon,
+    this.hint,
     this.inputAction,
   }) : super(key: key);
 

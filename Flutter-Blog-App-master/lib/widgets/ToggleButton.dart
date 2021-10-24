@@ -1,4 +1,3 @@
-import 'package:blogapp/Screens/Signup/components/body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import

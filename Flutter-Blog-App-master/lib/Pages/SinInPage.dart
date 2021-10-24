@@ -74,7 +74,9 @@ class _SignInPageState extends State<SignInPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ForgotPasswordPage()));
+                                builder: (context) => ForgotPasswordPage(
+                                      key: null,
+                                    )));
                       },
                       child: Text(
                         "Forgot Password ?",

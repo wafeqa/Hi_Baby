@@ -6,7 +6,7 @@ import '../palatte.dart';
 class RoundedButton extends StatelessWidget {
   const RoundedButton({
     Key key,
-    @required this.buttonText,
+    this.buttonText,
   }) : super(key: key);
 
   final String buttonText;

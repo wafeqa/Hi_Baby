@@ -1,9 +1,16 @@
-import 'package:blogapp/Screens/Signup/components/background.dart';
+import 'dart:convert';
+
+import 'package:blogapp/Profile/CreatProfile.dart';
 import 'package:blogapp/widgets/background-image.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+
+import 'Home.dart';
 
 class LOgin2 extends StatefulWidget {
   const LOgin2({Key key}) : super(key: key);
@@ -15,6 +22,54 @@ class LOgin2 extends StatefulWidget {
 class _LOgin2State extends State<LOgin2> {
   TapGestureRecognizer _changesign;
   bool showsignin = true;
+  TextEditingController _username = new TextEditingController();
+  TextEditingController _pass = new TextEditingController();
+  TextEditingController _username2 = new TextEditingController();
+
+  TextEditingController _pass2 = new TextEditingController();
+
+  TextEditingController _email = new TextEditingController();
+  TextEditingController _confirmpass = new TextEditingController();
+  GlobalKey<FormState> formstate_signup = new GlobalKey<FormState>();
+  GlobalKey<FormState> formstate_signin = new GlobalKey<FormState>();
+  Future signin() async {
+    var formdata = formstate_signin.currentState;
+    if (formdata.validate()) {
+      var data = {"username": _username.text, "password": _pass.text};
+      var url = "http://172.20.10.4/Hi_Baby/login.php";
+      print("okk");
+      var response = await http.post(url, body: json.encode(data));
+
+      var message = jsonDecode(response.body);
+
+      if (message == 'Login Matched') {
+        print('done');
+      }
+    } else {
+      print("not vaild");
+    }
+
+    catchError((Object error) {
+      //do something else
+      return null;
+    });
+  }
+
+  String validglobal(String val) {
+    if (val.trim().isEmpty) {
+      return (" field can be empty");
+    }
+  }
+
+  signup() async {
+    print("not vaild");
+    var formdata = formstate_signup.currentState;
+    if (formdata.validate()) {
+    } else {
+      print("not vaild");
+    }
+  }
+
   @override
   void initState() {
     _changesign = new TapGestureRecognizer()
@@ -39,10 +94,9 @@ class _LOgin2State extends State<LOgin2> {
             height: double.infinity,
             width: double.infinity,
           ),
-          //  poisition_top(wh),
-          //
-          // positione_bottom(wh),
-          BackgroundImage(),
+          poisition_top(wh),
+          positione_bottom(wh),
+          //  BackgroundImage(),
           Container(
               child: SingleChildScrollView(
             child: Column(
@@ -52,6 +106,7 @@ class _LOgin2State extends State<LOgin2> {
                 Center(child: Text("login")),
                 Center(
                     child: Container(
+                  margin: EdgeInsets.only(top: 40),
                   child: Text(
                     showsignin ? "Hi Baby" : "Sign Up",
                     style: TextStyle(
@@ -59,41 +114,47 @@ class _LOgin2State extends State<LOgin2> {
                         fontSize: 25,
                         fontStyle: FontStyle.italic),
                   ),
-                  margin: EdgeInsets.only(top: 30),
+                  // margin: EdgeInsets.only(top: 20),
                 )),
                 build_top(),
                 Padding(padding: EdgeInsets.only(top: 50)),
-                build_form(wh),
+                showsignin ? build_form(wh) : build_form_signup(wh),
                 Center(
                   child: Container(
                     // margin: EdgeInsets.only(top: 5),
                     child: Column(
                       children: <Widget>[
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            "forget password ?",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.pink.withOpacity(0.8),
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ),
+                        showsignin
+                            ? InkWell(
+                                onTap: () {},
+                                child: Text(
+                                  "forget password ?",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.pink.withOpacity(0.8),
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              )
+                            : SizedBox(),
                         SizedBox(
                           height: 24,
                         ),
                         RaisedButton(
                           elevation: 8,
-                          color: Colors.blueGrey[300],
+                          color: showsignin
+                              ? Colors.blueGrey[300]
+                              : Colors.pinkAccent.withOpacity(0.5),
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 30),
-                          onPressed: () {},
+                          onPressed: () {
+                            showsignin ? signin() : signup();
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                'Login',
+                                showsignin ? 'Login' : "Continue",
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
@@ -105,11 +166,13 @@ class _LOgin2State extends State<LOgin2> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(top: 60),
+                            margin: EdgeInsets.only(top: 47),
                             child: RichText(
                                 text: TextSpan(children: <TextSpan>[
                               TextSpan(
-                                  text: "You Dont have account?",
+                                  text: showsignin
+                                      ? "You Dont have account?"
+                                      : " You have  an Account ?",
                                   style: TextStyle(
                                       color: Colors.blueGrey, fontSize: 20)),
                               TextSpan(
@@ -131,28 +194,39 @@ class _LOgin2State extends State<LOgin2> {
         ])));
   }
 
-  Container build_top() {
-    return Container(
-      height: 100,
-      width: 100,
+  AnimatedContainer build_top() {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 400),
+      height: 120,
+      width: 120,
       decoration: BoxDecoration(
           color: showsignin ? Colors.white : Colors.blueGrey,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(300),
           boxShadow: [
-            BoxShadow(color: Colors.blueGrey, blurRadius: 2, spreadRadius: 3)
+            BoxShadow(color: Colors.white, blurRadius: 2, spreadRadius: 3)
           ]),
-      child: Icon(FontAwesomeIcons.baby,
-          size: 50, color: showsignin ? Colors.blueGrey : Colors.white),
+      child: Carousel(
+        borderRadius: true,
+        images: [
+          Image.asset('assets/baby_icon.jpg', fit: BoxFit.cover),
+          Image.asset('assets/baby_icon2.jpg', fit: BoxFit.cover),
+          Image.asset('assets/baby_icon3.jpg', fit: BoxFit.cover),
+        ],
+        showIndicator: false,
+      ),
+      // child: Icon(FontAwesomeIcons.baby,
+      // size: 50, color: showsignin ? Colors.blueGrey : Colors.white),
     );
   }
 
   Center build_form(double wh) {
     return Center(
-        child: Container(
+        child: AnimatedContainer(
+      duration: Duration(milliseconds: 400),
       height: 250,
       width: wh / 1.2,
       decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(40),
           boxShadow: [
             BoxShadow(
@@ -162,62 +236,77 @@ class _LOgin2State extends State<LOgin2> {
                 offset: Offset(0, 1))
           ]),
       child: Form(
+          key: formstate_signin,
           child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(" username"),
-            SizedBox(
-              height: 10,
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(" username",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 18,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _username,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        prefixIcon: Icon(Icons.person),
+                        hintText: "Enter username",
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(" Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 18,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _pass,
+                      obscureText: true,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: "Enter password",
+                        prefixIcon: Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      ))
+                ],
+              ),
             ),
-            TextFormField(
-                decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(4),
-              prefixIcon: Icon(Icons.person),
-              hintText: "Enter username",
-              filled: true,
-              fillColor: Colors.grey[200],
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.grey[500],
-                      style: BorderStyle.solid,
-                      width: 1)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.grey[500],
-                      style: BorderStyle.solid,
-                      width: 1)),
-            )),
-            SizedBox(
-              height: 10,
-            ),
-            Text(" Password"),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(4),
-                  hintText: "Enter password",
-                  prefixIcon: Icon(Icons.password_rounded),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.grey[500],
-                          style: BorderStyle.solid,
-                          width: 1)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.grey[500],
-                          style: BorderStyle.solid,
-                          width: 1)),
-                ))
-          ],
-        ),
-      )),
+          )),
     ));
   }
 
@@ -227,7 +316,8 @@ class _LOgin2State extends State<LOgin2> {
       scale: 1.3,
       child: Transform.translate(
         offset: Offset(0, -wh / 1.8),
-        child: Container(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
           height: wh,
           width: wh,
           decoration: BoxDecoration(
@@ -245,7 +335,8 @@ class _LOgin2State extends State<LOgin2> {
     return Positioned(
       top: 300,
       left: wh / 1.5,
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
         height: wh,
         width: wh,
         decoration: BoxDecoration(
@@ -257,4 +348,161 @@ class _LOgin2State extends State<LOgin2> {
       ),
     );
   }
+
+  build_form_signup(double wh) {
+    return Center(
+        child: AnimatedContainer(
+      duration: Duration(milliseconds: 400),
+      height: 360,
+      width: wh / 1.2,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(40),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.blueGrey,
+                spreadRadius: 0.1,
+                blurRadius: 1,
+                offset: Offset(0, 1))
+          ]),
+      child: Form(
+          key: formstate_signup,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(" username",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _username2,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        prefixIcon: Icon(Icons.person),
+                        hintText: "Enter username",
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(" Email",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _email,
+                      obscureText: true,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: "Enter your Email",
+                        prefixIcon: Icon(Icons.email_outlined),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(" Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _pass2,
+                      obscureText: true,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: "Enter password",
+                        prefixIcon: Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(" confirm Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _confirmpass,
+                      obscureText: true,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: "Enter password",
+                        prefixIcon: Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      ))
+                ],
+              ),
+            ),
+          )),
+    ));
+  }
+
+  void catchError(Null Function(Object error) param0) {}
 }

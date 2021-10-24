@@ -5,8 +5,8 @@ import '../palatte.dart';
 class TextInput extends StatelessWidget {
   const TextInput({
     Key key,
-    @required this.icon,
-    @required this.hint,
+    this.icon,
+    this.hint,
     this.inputType,
     this.inputAction,
   }) : super(key: key);

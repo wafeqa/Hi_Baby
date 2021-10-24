@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:blogapp/Pages/login-page.dart';
+import 'package:blogapp/Pages/login2.dart';
 
 
 
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onDone: () {
    Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return LoginPage();
+            return LOgin2();
           }));
               },
   
