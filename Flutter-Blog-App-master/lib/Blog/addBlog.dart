@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/Model/addBlogModels.dart';
 import 'package:blogapp/NetworkHandler.dart';
-import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Pages/gallary.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -21,7 +21,7 @@ class _AddBlogState extends State<AddBlog> {
   TextEditingController title = TextEditingController();
 
   final _picker = ImagePicker();
-  File image;
+  File imagename;
   IconData iconphoto = Icons.image;
   //NetworkHandler networkHandler = NetworkHandler();
   @override
@@ -43,7 +43,6 @@ class _AddBlogState extends State<AddBlog> {
         ],
       ),
       body: Form(
-        key: _globalkey,
         child: ListView(
           children: <Widget>[
             titleTextField(),
@@ -53,8 +52,9 @@ class _AddBlogState extends State<AddBlog> {
               height: 20,
             ),
             Container(
-              child:
-                  image == null ? Text('No image Selected') : Image.file(image),
+              child: imagename == null
+                  ? Text('No image Selected')
+                  : Image.file(imagename),
             )
           ],
         ),
@@ -145,29 +145,39 @@ class _AddBlogState extends State<AddBlog> {
     );
   }
 
+  Future takeCoverPhoto() async {
+    final coverPhoto = await _picker.getImage(source: ImageSource.camera);
+    //final coverPhoto2 = await _picker.getImage(source: ImageSource.camera);
+    setState(() {
+      imagename = File(coverPhoto.path);
+      // _imageFile = File(coverPhoto2.path);
+
+      // iconphoto = Icons.check_box;
+    });
+  }
+
   Future addButton() async {
+    String base64 = base64Encode(imagename.readAsBytesSync());
+    String image_name = imagename.path.split("/").last;
+    print(image_name);
     final uri = Uri.parse("http://172.20.10.4/Hi_Baby/upload.php");
-    var request = (await http.MultipartRequest('POST', uri));
-    //request.fields['title'] = title.text;
+    // var request = (await http.MultipartRequest('POST', uri));
+    // request.fields['title'] = title.text;
     // myrequest.fields['body'] = body.text;
-    var pic = await http.MultipartFile.fromPath("image", image.path);
-    request.files.add(pic);
-    var response = (await request.send());
+    var data = {
+      "title": title.text,
+      "imagename": image_name,
+      "image64": base64,
+    };
+
+    //  var pic = await http.MultipartFile.fromPath("image", imagename.path);
+    // print(imagename.path);
+    // request.files.add(pic);
+    var response = await http.post(uri, body: data);
     if (response.statusCode == 200) {
       print('image uploded');
     } else {
       print('image not uploded');
     }
-  }
-
-  Future takeCoverPhoto() async {
-    final coverPhoto = await _picker.getImage(source: ImageSource.gallery);
-    //final coverPhoto2 = await _picker.getImage(source: ImageSource.camera);
-    setState(() {
-      image = File(coverPhoto.path);
-      // _imageFile = File(coverPhoto2.path);
-
-      // iconphoto = Icons.check_box;
-    });
   }
 }

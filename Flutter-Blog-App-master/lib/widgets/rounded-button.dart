@@ -1,4 +1,4 @@
-import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Pages/gallary.dart';
 import 'package:flutter/material.dart';
 
 import '../palatte.dart';
@@ -24,7 +24,7 @@ class RoundedButton extends StatelessWidget {
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return HomePage();
+            return gallery();
           }));
         },
         child: Padding(

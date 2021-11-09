@@ -5,8 +5,9 @@
 // ignore_for_file: unused_import
 
 import 'package:blogapp/Pages/Home.dart';
-import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Pages/gallary.dart';
 import 'package:blogapp/Pages/comment.dart';
+import 'package:blogapp/Pages/doctor.dart';
 import 'package:blogapp/Pages/login2.dart';
 import 'package:blogapp/group.dart';
 
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: unused_import
 import 'package:blogapp/welcom';
+import 'package:http/http.dart';
 
 // ignore: unused_import
 import 'Blog/addBlog.dart';

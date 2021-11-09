@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/Home.dart';
-import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Pages/gallary.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
 
 // ignore: unused_import
@@ -73,7 +73,7 @@ class _CreatProfileState extends State<CreatProfile> {
                       circular = false;
                     });
                     Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => gallery()),
                         (route) => false);
                   }
                 } else {
@@ -81,7 +81,7 @@ class _CreatProfileState extends State<CreatProfile> {
                     circular = false;
                   });
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => gallery()),
                       (route) => false);
                 }
               },

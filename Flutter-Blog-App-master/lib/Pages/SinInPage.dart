@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:blogapp/Pages/ForgetPassword.dart';
-import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Pages/gallary.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
 import "package:flutter/material.dart";
 
@@ -135,7 +135,7 @@ class _SignInPageState extends State<SignInPage> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) => gallery(),
                           ),
                           (route) => false);
                     } else {

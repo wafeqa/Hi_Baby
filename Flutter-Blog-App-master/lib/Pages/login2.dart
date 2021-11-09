@@ -7,16 +7,73 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Home.dart';
+import 'dart:io';
 
 class LOgin2 extends StatefulWidget {
   const LOgin2({Key key}) : super(key: key);
 
   @override
   _LOgin2State createState() => _LOgin2State();
+}
+
+showdialog(context) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        duration:
+        Duration(milliseconds: 900);
+
+        return AlertDialog(
+          content: Row(
+            children: <Widget>[
+              Text("Loading......"),
+              CircularProgressIndicator()
+            ],
+          ),
+        );
+      });
+}
+
+savepref(String username) async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  preferences.setString("username", username);
+  print(preferences.getString("username"));
+}
+
+showloading(context, String mytitle, String mycontent) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        duration:
+        Duration(milliseconds: 1000);
+
+        return AlertDialog(
+          title: Text(
+            mytitle,
+            style: TextStyle(fontSize: 19, color: Colors.blueGrey),
+          ),
+          content: Text(
+            mycontent,
+            style: TextStyle(fontSize: 19, color: Colors.blueGrey),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "done",
+                  style: TextStyle(fontSize: 19, color: Colors.blueGrey),
+                ))
+          ],
+        );
+      });
 }
 
 class _LOgin2State extends State<LOgin2> {
@@ -32,18 +89,38 @@ class _LOgin2State extends State<LOgin2> {
   TextEditingController _confirmpass = new TextEditingController();
   GlobalKey<FormState> formstate_signup = new GlobalKey<FormState>();
   GlobalKey<FormState> formstate_signin = new GlobalKey<FormState>();
+
+  savePref(String username, String email, String id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("id", id);
+    preferences.setString("username", username);
+    preferences.setString("email", email);
+    print(preferences.getString("username"));
+    print(preferences.getString("email"));
+    print(preferences.getString("id"));
+  }
+
   Future signin() async {
     var formdata = formstate_signin.currentState;
     if (formdata.validate()) {
-      var data = {"username": _username.text, "password": _pass.text};
+      Map data = {"username": _username.text, "password": _pass.text};
       var url = "http://172.20.10.4/Hi_Baby/login.php";
+      var response = await http.post(url, body: data);
       print("okk");
-      var response = await http.post(url, body: json.encode(data));
+      Map responsebody = jsonDecode((response.body));
 
-      var message = jsonDecode(response.body);
-
-      if (message == 'Login Matched') {
-        print('done');
+      if (responsebody['status'] == "success") {
+        print("done");
+        savePref(responsebody['username'], responsebody['email'],
+            responsebody['id']);
+        showdialog(context);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => home_page()),
+            (route) => false);
+      } else {
+        print('login failed');
+        showloading(context, "wrong", " Invaild username or password ");
       }
     } else {
       print("not vaild");
@@ -61,10 +138,26 @@ class _LOgin2State extends State<LOgin2> {
     }
   }
 
-  signup() async {
-    print("not vaild");
+  Future signup() async {
     var formdata = formstate_signup.currentState;
     if (formdata.validate()) {
+      var data = {
+        "username": _username2.text,
+        "email": _email.text,
+        "password": _pass2.text,
+      };
+      final uri = Uri.parse("http://172.20.10.4/Hi_Baby/signup.php");
+      var request = await http.MultipartRequest('POST', uri);
+      // var message = jsonDecode(jsonEncode(response.body));
+      request.fields['username'] = _username2.text;
+      request.fields['email'] = _email.text;
+      request.fields['password'] = _pass2.text;
+      var response = (await request.send());
+      if (response.statusCode == 200) {
+        print('image uploded');
+      } else {
+        print('image not uploded');
+      }
     } else {
       print("not vaild");
     }
@@ -404,38 +497,6 @@ class _LOgin2State extends State<LOgin2> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(" Email",
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      controller: _email,
-                      obscureText: true,
-                      validator: validglobal,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(4),
-                        hintText: "Enter your Email",
-                        prefixIcon: Icon(Icons.email_outlined),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey[500],
-                                style: BorderStyle.solid,
-                                width: 1)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey[500],
-                                style: BorderStyle.solid,
-                                width: 1)),
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Text(" Password",
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -484,6 +545,37 @@ class _LOgin2State extends State<LOgin2> {
                         contentPadding: EdgeInsets.all(4),
                         hintText: "Enter password",
                         prefixIcon: Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey[500],
+                                style: BorderStyle.solid,
+                                width: 1)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(" Email",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                      controller: _email,
+                      validator: validglobal,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: "Enter your Email",
+                        prefixIcon: Icon(Icons.email_outlined),
                         filled: true,
                         fillColor: Colors.grey[200],
                         enabledBorder: OutlineInputBorder(

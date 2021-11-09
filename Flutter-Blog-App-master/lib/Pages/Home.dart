@@ -1,11 +1,13 @@
 import 'package:blogapp/Blog/addBlog.dart';
+import 'package:blogapp/Pages/baby%20_sitter.dart';
 import 'package:blogapp/Pages/comment.dart';
+import 'package:blogapp/Pages/doctor.dart';
 import 'package:blogapp/group.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
-import 'HomePage.dart';
+import 'gallary.dart';
 import 'login2.dart';
 
 class home_page extends StatefulWidget {
@@ -112,7 +114,7 @@ class _home_pageState extends State<home_page> {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()),
+                                  builder: (context) => gallery()),
                               (route) => false);
                         }),
                     InkWell(
@@ -151,7 +153,12 @@ class _home_pageState extends State<home_page> {
                               backgroundImage:
                                   AssetImage("assets/baby_doc.jpg"),
                             )),
-                        onTap: () {}),
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return doctor();
+                          }));
+                        }),
                     InkWell(
                         child: GridTile(
                             footer: Container(
@@ -209,9 +216,32 @@ class _home_pageState extends State<home_page> {
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => group(Key(null))),
+                              MaterialPageRoute(builder: (context) => group()),
                               (route) => false);
+                        }),
+                    InkWell(
+                        child: GridTile(
+                            footer: Container(
+                              padding: EdgeInsets.all(5),
+                              color: Colors.purpleAccent,
+                              height: 30,
+                              child: Text(
+                                'baby sitter',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundImage:
+                                  AssetImage("assets/baby_sitter.jpg"),
+                            )),
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Baby_sitter();
+                          }));
                         }),
                   ],
                 ))
